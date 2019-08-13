@@ -77,7 +77,6 @@ class Change_sentiment(object):
 	def __init__(self):
 		bKnow_project_host_user_id = get_bool_input("Вы знаете id владельца проекта?")
 		iProject_id,iProject_host_user_id,iChange_user_id,iNew_sentiment,iOld_sentiment,sS_date_part,sF_date_part = self.get_variables(bKnow_project_host_user_id)
-		a = 1
 		copy_to_buffer("""
 			SELECT P.type as smi_social, P.item_id as news_id, %d as sentiment, 'manual' as sentiment_type, %d as user_id
 			FROM project_items.project_items_%d P, imasv2.sentiment S
