@@ -1,5 +1,7 @@
 from dateparser import parse
 import pyperclip
+from urllib.parse import urlparse
+import re
 def get_int_input(var_name):
 	while True:
 		try:
@@ -100,20 +102,38 @@ class Change_sentiment(object):
 		sS_date_part,sF_date_part = get_sql_date_part("P.")
 		return iProject_id,iProject_host_user_id,iChange_user_id,iNew_sentiment,iOld_sentiment,sS_date_part,sF_date_part
 
-
-
+class Search_item_in_base(object):
+	def __init__(self):
+		sUrls = get_str_input("url СМИ новостей")
+		sUrls = sUrls.replace("'","")
+		sUrls = sUrls.replace('"',"")
+		url_combination = []
+		for url in sUrls.split(" "):
+			splitted = urlparse(url)
+			cut_part = len(splitted.scheme+"://"+splitted.netloc)
+			first_part = splitted.netloc
+			second_part = url[cut_part:]
+			match = re.search(r'^www\.', first_part)
+			if match:
+				first_part = first_part.replace('www.', '')
+			url_combination.append("'https://"+first_part+second_part+"'")
+			url_combination.append("'https://www."+first_part+second_part+"'")
+			url_combination.append("'http://"+first_part+second_part+"'")
+			url_combination.append("'http://www."+first_part+second_part+"'")
+		print(url_combination)
 
 def main():
-	while True:
-		try:
-			user_choise = input("Введите команду: ").strip()
-		except Exception:
-			continue
-		else:
-			if(user_choise == "eq_s"):
-				Equalize_sentiment()
-			elif (user_choise == "ch_s"):
-				Change_sentiment()
-			break
+	Search_item_in_base()
+	# while True:
+	# 	try:
+	# 		user_choise = input("Введите команду: ").strip()
+	# 	except Exception:
+	# 		continue
+	# 	else:
+	# 		if(user_choise == "eq_s"):
+	# 			Equalize_sentiment()
+	# 		elif (user_choise == "ch_s"):
+	# 			Change_sentiment()
+	# 		break
 
 main()
